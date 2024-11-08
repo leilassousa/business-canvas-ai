@@ -1,36 +1,117 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Business Canvas AI Analyzer
+A web-based tool that helps entrepreneurs and business owners analyze their business plans using AI. The tool guides users through structured questions based on the Business Canvas Model and generates comprehensive analysis reports.
+Features
 
-## Getting Started
+🔒 Password-protected access
+📝 Interactive multi-section business questionnaire
+🤖 AI-powered analysis using Claude 3
+📊 Comprehensive business report generation
+📥 PDF export functionality
+🎨 Clean, responsive UI
 
-First, run the development server:
+Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Frontend: Next.js 14 with App Router
+Styling: Tailwind CSS
+AI Integration: Anthropic's Claude 3
+PDF Generation: jsPDF
+Type Safety: TypeScript
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Project Structure
+Copysrc/
+├── app/
+│   ├── api/
+│   │   ├── analyze/        # AI analysis endpoint
+│   │   └── generate-pdf/   # PDF generation endpoint
+│   └── page.tsx            # Main application page
+├── components/
+│   ├── BusinessForm/       # Form components
+│   │   ├── index.tsx
+│   │   ├── FormSection.tsx
+│   │   └── questions.ts
+│   └── Report/            # Report generation
+│       ├── index.tsx
+│       └── PDFReport.tsx
+└── lib/
+    ├── anthropic.ts       # Anthropic API client
+    └── types.ts           # TypeScript definitions
+Setup Instructions
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Clone the repository:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+bashCopygit clone https://github.com/[your-username]/business-canvas-ai.git
+cd business-canvas-ai
 
-## Learn More
+Install dependencies:
 
-To learn more about Next.js, take a look at the following resources:
+bashCopynpm install
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Create .env.local file with required environment variables:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+envCopyANTHROPIC_API_KEY=your_api_key_here
+PASSWORD=your_chosen_password
 
-## Deploy on Vercel
+Run the development server:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+bashCopynpm run dev
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open http://localhost:3000 in your browser.
+
+Development Progress
+✅ Completed
+
+Project setup and structure
+Basic authentication
+Business Canvas questionnaire implementation
+Integration with Anthropic's Claude API
+Report generation logic
+PDF export functionality
+Basic styling and UI components
+
+🚧 Pending for Phase 1
+
+Testing & QA
+
+End-to-end testing of form submission
+PDF generation testing
+Cross-browser compatibility checks
+Mobile responsiveness verification
+
+
+UI/UX Improvements
+
+Loading states and animations
+Better error handling
+Progress indicators
+Form validation
+Responsive design refinements
+
+
+Report Generation
+
+Enhanced PDF formatting
+Custom styling for reports
+Additional export options
+
+
+Deployment
+
+Vercel deployment setup
+Environment variables configuration
+Domain setup and SSL
+
+
+
+Future Enhancements (Phase 2)
+
+User authentication system
+Save and resume functionality
+Multiple report history
+Template customization
+Analytics dashboard
+Multi-language support
+
+Contributing
+Contributions are welcome! Please feel free to submit a Pull Request.
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
