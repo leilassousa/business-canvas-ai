@@ -3,7 +3,7 @@ import FormSection from './FormSection';
 import Alert from '../Alert';
 import { Section } from '@/lib/types';
 import type { Question } from '@/lib/types';
-import * as questionsModule from '@/components/BusinessForm/question';
+import * as questionsModule from './question';
 
 interface BusinessFormProps {
   onSubmit: (formData: Record<string, string>) => Promise<void>;
@@ -15,6 +15,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onSubmit }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [report, setReport] = useState<string | null>(null);
 
   const handleInputChange = (questionId: string, value: string) => {
     setFormData((prev) => ({
@@ -65,7 +66,6 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onSubmit }) => {
   };
 
   const validateForm = (): boolean => {
-    // Check if all questions across all sections are answered
     const allQuestions = questionsModule.sections.flatMap(section => 
       questionsModule.getQuestionsBySection(section)
     );
@@ -81,7 +81,7 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onSubmit }) => {
       );
       
       setError(`Please complete all questions. Missing answers in ${section} section.`);
-      setCurrentSection(section as Section); // Navigate to the section with missing answers
+      setCurrentSection(section as Section);
       return false;
     }
 
@@ -91,11 +91,10 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onSubmit }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Clear any existing messages
     setError(null);
     setSuccessMessage(null);
+    setReport(null);
 
-    // Validate the form before submission
     if (!validateForm()) {
       return;
     }
@@ -103,11 +102,30 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onSubmit }) => {
     setIsSubmitting(true);
 
     try {
-      await onSubmit(formData);
+      // Make the API call to generate report
+      const response = await fetch('/api/generate-report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData)
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Failed to generate report');
+      }
+
+      // Store the generated report
+      setReport(data.report);
       setSuccessMessage('Report generated successfully!');
-      // Optional: You might want to reset the form or redirect the user
+      
+      // Call the original onSubmit prop
+      await onSubmit(formData);
+      
     } catch (error: any) {
-      console.error('Error submitting form:', error);
+      console.error('Error generating report:', error);
       setError(error.message || 'Failed to generate report. Please try again.');
     } finally {
       setIsSubmitting(false);
@@ -115,7 +133,6 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onSubmit }) => {
   };
 
   const handleSectionClick = (section: Section) => {
-    // Validate current section before allowing navigation
     if (currentSection !== section && !validateCurrentSection()) {
       return;
     }
@@ -206,6 +223,13 @@ const BusinessForm: React.FC<BusinessFormProps> = ({ onSubmit }) => {
           )}
         </div>
       </form>
+
+      {report && (
+        <div className="mt-8 p-6 bg-white rounded-lg shadow">
+          <h2 className="text-2xl font-bold mb-4">Your Business Report</h2>
+          <div className="whitespace-pre-wrap">{report}</div>
+        </div>
+      )}
     </div>
   );
 };

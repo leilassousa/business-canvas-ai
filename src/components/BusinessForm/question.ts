@@ -183,6 +183,44 @@ export const questions: Question[] = [
   }
 ];
 
+// New helper functions for question-by-question navigation
+export const getAllQuestions = (): Question[] => {
+  return questions;
+};
+
+export const getTotalQuestions = (): number => {
+  return questions.length;
+};
+
+export const getQuestionIndex = (questionId: string): number => {
+  return questions.findIndex(q => q.id === questionId);
+};
+
+export const getCurrentQuestion = (questionId: string): Question | null => {
+  return questions.find(q => q.id === questionId) || null;
+};
+
+export const getNextQuestion = (currentQuestionId: string): Question | null => {
+  const currentIndex = getQuestionIndex(currentQuestionId);
+  return currentIndex < questions.length - 1 ? questions[currentIndex + 1] : null;
+};
+
+export const getPreviousQuestion = (currentQuestionId: string): Question | null => {
+  const currentIndex = getQuestionIndex(currentQuestionId);
+  return currentIndex > 0 ? questions[currentIndex - 1] : null;
+};
+
+// Get the first question of the form
+export const getFirstQuestion = (): Question => {
+  return questions[0];
+};
+
+// Get the last question of the form
+export const getLastQuestion = (): Question => {
+  return questions[questions.length - 1];
+};
+
+// Optional: Keep section-related functions for progress tracking
 export const getQuestionsBySection = (section: Section): Question[] => {
   return questions.filter(q => q.section === section);
 };
@@ -195,12 +233,31 @@ export const getSectionIndex = (section: Section): number => {
   return sections.indexOf(section);
 };
 
+// Helper to get progress percentage
+export const getProgressPercentage = (currentQuestionId: string): number => {
+  const currentIndex = getQuestionIndex(currentQuestionId);
+  return Math.round(((currentIndex + 1) / questions.length) * 100);
+};
+
+// Helper to check if it's the last question
+export const isLastQuestion = (questionId: string): boolean => {
+  return getQuestionIndex(questionId) === questions.length - 1;
+};
+
+// Helper to check if it's the first question
+export const isFirstQuestion = (questionId: string): boolean => {
+  return getQuestionIndex(questionId) === 0;
+};
+
 export const getNextSection = (currentSection: Section): Section | null => {
-  const currentIndex = getSectionIndex(currentSection);
-  return currentIndex < sections.length - 1 ? sections[currentIndex + 1] : null;
+    const currentIndex = sections.indexOf(currentSection);
+    return currentIndex < sections.length - 1 ? sections[currentIndex + 1] : null;
 };
 
 export const getPreviousSection = (currentSection: Section): Section | null => {
-  const currentIndex = getSectionIndex(currentSection);
-  return currentIndex > 0 ? sections[currentIndex - 1] : null;
+    const currentIndex = sections.indexOf(currentSection);
+    return currentIndex > 0 ? sections[currentIndex - 1] : null;
 };
+
+console.log('Questions loaded:', questions.length);
+console.log('Sections available:', sections.length);
